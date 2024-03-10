@@ -3,9 +3,13 @@ import { personsImgs } from "../utils/images";
 
 export const navigationLinks = [
   { id: 1, title: "users" },
-  { id: 2, title: "employers" },
-  { id: 3, title: "requests" },
-  { id: 4, title: "orders" },
+  // { id: 2, title: "employers" },
+  // { id: 3, title: "requests" },
+  // { id: 4, title: "orders" },
+  { id: 5, title: "Categories" },
+  { id: 6, title: "Courses" },
+  { id: 7, title: "Sections" },
+  { id: 8, title: "Posts" },
 ];
 
 export const transactions = [

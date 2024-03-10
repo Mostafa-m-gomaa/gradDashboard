@@ -6,29 +6,28 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ContentTop from "../ContentTop/ContentTop";
 
-const Users = () => {
+const Posts = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [artId, setArtId] = useState("");
   const [refresh, setRefresh] = useState(false);
   const { route, setLoader } = useContext(AppContext);
   const [users, setUsers] = useState([]);
-  const [role, setRole] = useState("");
   const [userName, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+ 
   const [image, setImage] = useState(null);
-  const [phone, setPhone] = useState("");
 
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     console.log(reader.result);
+  //     reader.onloadend = () => {
+  //       setImagePreview(reader.result);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      setImage(file);
-    } else {
-      setImage(null);
-    }
-  };
 
   const deleteButton = (id) => {
     setShowConfirm(true);
@@ -36,30 +35,23 @@ const Users = () => {
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoader(true);
-
     const formData = new FormData();
 
-    formData.append("username", userName);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("passwordConfirm", passwordConfirmation);
-    formData.append("role", role);
-    formData.append("phone", phone);
-    formData.append("profileImg", image);
-
+    formData.append("content", userName);
+  
+    setLoader(true);
     try {
-      const response = await fetch(`${route}/users`, {
+      const response = await fetch(`${route}/posts`, {
         method: "POST",
         body: formData,
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-         
+          
         },
       }).then((res) => res.json());
       setLoader(false);
       console.log(response);
-      if (response.data) {
+      if (response.success) {
         toast.success("Added Successfully");
         setRefresh(!refresh);
       } else if (response.errors) {
@@ -76,7 +68,7 @@ const Users = () => {
     setLoader(true);
 
     try {
-      const response = await fetch(`${route}/users/${artId}`, {
+      const response = await fetch(`${route}/posts/${artId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -100,13 +92,14 @@ const Users = () => {
   };
 
   useEffect(() => {
-    fetch(`${route}/users`, {
+    fetch(`${route}/posts/public`, {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         if (data.data) {
           setUsers(data.data);
           console.log(data.data);
@@ -132,68 +125,30 @@ const Users = () => {
       ) : null}
       <div className="container">
         <div className="add">
-          <h1>Add User</h1>
+          <h1>Add Post</h1>
           <form action="" onSubmit={handleSubmit}>
             <label htmlFor="">
-              Name
-              <input
-                onChange={(e) => setUsername(e.target.value)}
-                type="text"
-              />
+              Content
+             
+              <textarea name=""   onChange={(e) => setUsername(e.target.value)} id="" cols="70" rows="5"></textarea>
             </label>
-            <label htmlFor="">
-              Email
-              <input onChange={(e) => setEmail(e.target.value)} type="text" />
-            </label>
-            <label htmlFor="">
-              Phone
-              <input onChange={(e) => setPhone(e.target.value)} type="text" />
-            </label>
-            <label htmlFor="">
-              Password
-              <input
-                onChange={(e) => setPassword(e.target.value)}
-                type="text"
-              />
-            </label>
-            <label htmlFor="">
-              confirm Password
-              <input
-                onChange={(e) => setPasswordConfirmation(e.target.value)}
-                type="text"
-              />
-            </label>
-            <label htmlFor="">
-              Role
-              <select name="" id="" onChange={(e) => setRole(e.target.value)}>
-                <option value="">select role</option>
-                <option value="user">user</option>
-                <option value="admin">admin</option>
-                <option value="instructor">instructor</option>
-              </select>
-            </label>
-            <label htmlFor="">
-              profile image
-              <input
-                 onChange={handleImageChange}
-                type="file"
-              />
-            </label>
+      
+         
+            
+           
+       
 
             <button type="submit">add</button>
           </form>
         </div>
         <div className="all-art">
-          <h1>Users</h1>
+          <h1>Posts</h1>
           <div className="arts">
             {users.map((user, index) => {
               return (
                 <div className="user-card" key={index}>
-                  <div className="name">user name : {user.username}</div>
-                  {user.profileImg ?<img src={user.profileImg} /> :null}
-                  <div className="name">{user.email}</div>
-                  <div className="name">role :{user.role}</div>
-                
+                  <div className="name"> {user.content}</div>
+                 
                   <button onClick={() => deleteButton(user._id)}>Delete</button>
                 </div>
               );
@@ -205,4 +160,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Posts;

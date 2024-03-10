@@ -31,7 +31,7 @@ const Sidebar = () => {
         <div className="info-img img-fit-cover">
           <img src={myfoto} alt="profile image" />
         </div>
-        <span className="info-name">Hamad</span>
+        <span className="info-name">علمني</span>
       </div>
 
       <nav className="navigation">
